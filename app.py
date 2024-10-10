@@ -13,10 +13,10 @@ app.register_blueprint(bp_init)
 app.register_blueprint(bp_query)
 
 # init_accidents()
-# print(count_accidents_by_region(accidents,'225'))
-# print(count_accidents_by_region_and_period(accidents,'225', 'month', '18/09/2023'))
-# print(count_accidents_by_cause_and_region(accidents,'225'))
-# print(get_accident_statistics(accidents, injuries, '225'))
+print(count_accidents_by_region(accidents,'225'))
+print(count_accidents_by_region_and_period(accidents,'225', 'month', '18/09/2023'))
+print(count_accidents_by_cause_and_region(accidents,'225'))
+print(get_accident_statistics(accidents, injuries, '225'))
 @app.route('/')
 def hello_world():  # put application's code here
     return 'Hello World!'
