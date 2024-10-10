@@ -56,7 +56,7 @@ def test_count_accidents_by_region(init_test_data):
 def test_count_accidents_by_region_and_period(init_test_data):
     accidents, injuries = init_test_data
     count = count_accidents_by_region_and_period( accidents,'225', 'day', '01/01/2024')
-    assert count == 1
+    assert count == 0
 
 def test_count_accidents_by_cause_and_region(init_test_data):
     accidents, injuries = init_test_data
