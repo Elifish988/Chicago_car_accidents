@@ -1,7 +1,9 @@
 from collections import defaultdict
 from datetime import timedelta, datetime
 
-from database.conect import accidents
+from flask import jsonify
+
+from database.conect import accidents, injuries
 
 
 def count_accidents_by_region(region):
@@ -40,5 +42,42 @@ def count_accidents_by_cause_and_region(region):
         cause_count[cause] += 1
 
     return dict(cause_count)
+
+
+def get_accident_statistics(region):
+    total_injuries = 0
+    total_fatal_injuries = 0
+    total_non_fatal_injuries = 0
+    fatal_events = []
+    non_fatal_events = []
+
+    accident_records = accidents.find({'BEAT_OF_OCCURRENCE': region})
+
+    for record in accident_records:
+        injury_id = record['injury']
+        injury = injuries.find_one({'_id': injury_id})
+
+        if injury:
+            total_injuries += injury['INJURIES_TOTAL']
+            total_fatal_injuries += injury['INJURIES_FATAL']
+            total_non_fatal_injuries += injury['INJURIES_NON_FATAL']
+
+            # המרת ObjectId למחרוזת תוספת בעקבות באג
+            record['_id'] = str(record['_id'])
+            record['injury'] = str(injury_id)
+
+            # הוספת האירוע לרשימות
+            if injury['INJURIES_FATAL'] > 0:
+                fatal_events.append(record)
+            else:
+                non_fatal_events.append(record)
+
+    return {
+        'total_injuries': total_injuries,
+        'total_fatal_injuries': total_fatal_injuries,
+        'total_non_fatal_injuries': total_non_fatal_injuries,
+        'fatal_events': fatal_events,
+        'non_fatal_events': non_fatal_events
+    }
 
 
